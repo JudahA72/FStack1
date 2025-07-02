@@ -5,10 +5,10 @@ import Navbar from './components/ui/Navbar'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
+import DashboardPage from './pages/DashboardPage'
 
 // Placeholder components (to be created later)
 const ClassesPage = () => <div className="p-8 text-center">Classes Page - Coming Soon</div>
-const DashboardPage = () => <div className="p-8 text-center">Dashboard Page - Coming Soon</div>
 const AdminPage = () => <div className="p-8 text-center">Admin Page - Coming Soon</div>
 
 const AppContent: React.FC = () => {
