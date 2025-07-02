@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { supabase } from './lib/supabase'
+import { supabase, isSupabaseConfigured } from './lib/supabase'
 import Navbar from './components/ui/Navbar'
 import HomePage from './pages/HomePage'
 
@@ -16,9 +16,19 @@ function App() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Skip auth setup if Supabase isn't configured
+    if (!isSupabaseConfigured()) {
+      console.log('Supabase not configured - running in development mode')
+      setLoading(false)
+      return
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
+      setLoading(false)
+    }).catch((error) => {
+      console.error('Auth error:', error)
       setLoading(false)
     })
 
@@ -33,7 +43,9 @@ function App() {
   }, [])
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    if (isSupabaseConfigured()) {
+      await supabase.auth.signOut()
+    }
   }
 
   if (loading) {
