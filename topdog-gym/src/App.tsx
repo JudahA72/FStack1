@@ -6,10 +6,10 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import DashboardPage from './pages/DashboardPage'
+import { AdminPage } from './pages/AdminPage'
 
 // Placeholder components (to be created later)
 const ClassesPage = () => <div className="p-8 text-center">Classes Page - Coming Soon</div>
-const AdminPage = () => <div className="p-8 text-center">Admin Page - Coming Soon</div>
 
 const AppContent: React.FC = () => {
   const { user, loading, signOut } = useAuth()

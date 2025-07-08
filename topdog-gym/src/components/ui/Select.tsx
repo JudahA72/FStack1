@@ -9,8 +9,9 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
   error?: string
   helperText?: string
-  options: SelectOption[]
+  options?: SelectOption[]
   placeholder?: string
+  children?: React.ReactNode
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -19,6 +20,7 @@ const Select: React.FC<SelectProps> = ({
   helperText,
   options,
   placeholder,
+  children,
   className = '',
   id,
   ...props
@@ -54,11 +56,15 @@ const Select: React.FC<SelectProps> = ({
             {placeholder}
           </option>
         )}
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
+        {options ? (
+          options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))
+        ) : (
+          children
+        )}
       </select>
       
       {error && (
@@ -72,4 +78,5 @@ const Select: React.FC<SelectProps> = ({
   )
 }
 
+export { Select }
 export default Select 

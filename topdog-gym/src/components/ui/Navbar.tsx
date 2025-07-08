@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
 import Button from './Button'
 
 interface NavbarProps {
@@ -10,6 +11,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
+  const { isAdmin } = useAuth()
   
   const isActive = (path: string) => location.pathname === path
   
@@ -17,6 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
     { path: '/', label: 'Home' },
     { path: '/classes', label: 'Classes' },
     { path: '/dashboard', label: 'Dashboard' },
+    ...(isAdmin ? [{ path: '/admin', label: 'Admin' }] : []),
   ]
   
   return (

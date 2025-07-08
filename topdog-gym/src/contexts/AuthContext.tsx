@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { isUserAdmin } from '../utils/adminMockData'
 
 interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
+  isAdmin: boolean
   signUp: (email: string, password: string, userData?: any) => Promise<{ error: any }>
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
@@ -30,6 +32,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  // Check if user is admin whenever user changes
+  useEffect(() => {
+    if (user?.email) {
+      setIsAdmin(isUserAdmin(user.email))
+    } else {
+      setIsAdmin(false)
+    }
+  }, [user])
 
   useEffect(() => {
     // Skip auth setup if Supabase isn't configured
@@ -92,7 +104,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signIn = async (email: string, password: string) => {
     if (!isSupabaseConfigured()) {
       // Demo mode - simulate login success
-      setUser({
+      const demoUser = {
         id: 'demo-user',
         email,
         created_at: new Date().toISOString(),
@@ -101,7 +113,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         role: 'authenticated',
         user_metadata: { full_name: 'Demo User' },
         app_metadata: {}
-      } as User)
+      } as User
+      
+      setUser(demoUser)
       return { error: null }
     }
 
@@ -151,6 +165,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     session,
     loading,
+    isAdmin,
     signUp,
     signIn,
     signOut,
